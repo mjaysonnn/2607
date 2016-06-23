@@ -1,37 +1,48 @@
 import java.util.Scanner;
  
 public class Main {
+    public static void main(String[] args) {
+        new Main().run();
+    }
  
-    static int Answer = 0;
- 
-    public static void main(String[] args) throws Exception {
+    private void run() {
         Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
-        String basic = sc.next();
+        int n = sc.nextInt();
+        String[] A = new String[n];
+        for (int i = 0; i < n; i++) {
+            A[i] = sc.next();
+        }
          
-        for (int i = 0; i < N-1; i++) {
-            String comStr = sc.next();
-            char[] compareStr = comStr.toCharArray();
-             
-            if(basic.equals(comStr)){
-                Answer++;
-                continue;
-            }
-            else{
-                int flagCount = 0;
-                for (int j = 0; j < compareStr.length; j++) {
-                    if(basic.indexOf(compareStr[j]) == -1){
-                        flagCount++;
-                    }
-                    if (flagCount == 2)
-                        break;
-                }
-                 
-                if ((flagCount == 0) || (flagCount==1 && compareStr.length > 1)){
-                    Answer++;
-                }
+        int count = 0;
+        for (int i = 1; i < n; i++) {
+            if (isSimilarWord(A[0], A[i])) {
+                count++;
             }
         }
-        System.out.println(Answer);
+        System.out.println(count);
+    }
+ 
+    private boolean isSimilarWord(String word1, String word2) {
+        int total = 26;
+        int[] count = new int[total];
+ 
+        for (int i = 0; i < word1.length(); i++) {
+            count[word1.charAt(i) - 'A']++;
+        }
+         
+        for (int i = 0; i < word2.length(); i++) {
+            count[word2.charAt(i) - 'A']--;
+        }
+         
+        int pCnt = 0;
+        int mCnt = 0;
+        for (int i = 0; i < total; i++) {
+            if (count[i] > 0) pCnt += count[i];
+            if (count[i] < 0) mCnt += count[i];
+        }
+         
+        if (0 <= pCnt && pCnt <= 1 && -1 <= mCnt && mCnt <= 0) return true;
+         
+        return false;
     }
 }
